@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synapse - WikiGame Multijugador</title>
+    <meta name="description" content="Juego interactivo multijugador donde navegas de un concepto a otro a través de Wikipedia. Pon a prueba tu conocimiento y compite con otros jugadores.">
+    <meta name="keywords" content="wikipedia, juego, multijugador, educativo, web game, synapse">
+    <meta name="author" content="Synapse WikiGame">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://synapse-wikigame.vercel.app/">
+    <meta property="og:title" content="Synapse - WikiGame Multijugador">
+    <meta property="og:description" content="Juego interactivo multijugador donde navegas de un concepto a otro a través de Wikipedia.">
+    <meta property="og:site_name" content="Synapse WikiGame">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://synapse-wikigame.vercel.app/">
+    <meta property="twitter:title" content="Synapse - WikiGame Multijugador">
+    <meta property="twitter:description" content="Juego interactivo multijugador donde navegas de un concepto a otro a través de Wikipedia.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://es.wikipedia.org">
+    <link rel="preconnect" href="https://firebase.googleapis.com">
+    
+    <link rel="stylesheet" href="styles.css">PE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synapse </title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="/concepts.json" as="fetch" crossorigin>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+        import { getDatabase, ref, set, get, onValue, push, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyAIVruI4bWGKVBPMODB60Vpn2LlSSOe9wo",
+            authDomain: "synapse-ce462.firebaseapp.com",
+            databaseURL: "https://synapse-ce462-default-rtdb.firebaseio.com/",
+            projectId: "synapse-ce462",
+            storageBucket: "synapse-ce462.firebasestorage.app",
+            messagingSenderId: "1049492264559",
+            appId: "1:1049492264559:web:ea801d1c209c662e3b1f9a",
+            measurementId: "G-BRBDR7BZEL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app);
+        
+        // Make Firebase available globally for the multiplayer system
+        window.firebaseDb = database;
+        window.firebaseRef = ref;
+        window.firebaseSet = set;
+        window.firebaseGet = get;
+        window.firebaseOnValue = onValue;
+        window.firebasePush = push;
+        window.firebaseRemove = remove;
+        window.firebaseServerTimestamp = serverTimestamp;
+        
+        console.log('🔥 Firebase inicializado correctamente para Synapse ');
+    </script>
+</head>
+<body>
+
+    <!-- Selección inicial: Singleplayer vs Online -->
+    <div id="game-type-selection" class="mode-selection">
+        <h2>Selecciona el tipo de juego:</h2>
+        <div class="mode-options">
+            <button id="singleplayer-btn" class="type-btn">Singleplayer</button>
+            <button id="online-btn" class="type-btn">Online</button>
+        </div>
+    </div>
+
+    <!-- Selección de dificultad para Singleplayer -->
+    <div id="singleplayer-mode-selection" class="mode-selection hidden">
+        <h2>Modo Singleplayer - Selecciona la dificultad:</h2>
+        <div class="mode-options">
+            <button id="single-easy">Fácil (6 min)</button>
+            <button id="single-normal">Normal (4 min)</button>
+            <button id="single-hard">Difícil (2 min)</button>
+            <button id="single-endless">Sin Tiempo</button>
+        </div>
+        <button id="back-from-single" class="back-btn">← Volver</button>
+    </div>
+
+    <!-- Selección de dificultad para Online -->
+    <div id="online-mode-selection" class="mode-selection hidden">
+        <h2>Configurar Sala - Selecciona la dificultad:</h2>
+        <div class="mode-options">
+            <button id="online-easy">Fácil (6 min)</button>
+            <button id="online-normal">Normal (4 min)</button>
+            <button id="online-hard">Difícil (2 min)</button>
+            <button id="online-endless">Sin Tiempo</button>
+        </div>
+        <button id="back-from-online" class="back-btn">← Volver</button>
+    </div>
+
+    <!-- Selección de número de rondas para Online -->
+    <div id="online-rounds-selection" class="mode-selection hidden">
+        <h2>Configurar Sala - Selecciona el número de rondas:</h2>
+        <div class="mode-options">
+            <button id="rounds-3">3 Rondas</button>
+            <button id="rounds-5">5 Rondas</button>
+        </div>
+        <button id="back-from-rounds" class="back-btn">← Volver</button>
+    </div>
+
+    <!-- Crear o unirse a sala (AHORA PRIMERO) -->
+    <div id="room-selection" class="mode-selection hidden">
+        <h2>Modo Online:</h2>
+        <div class="mode-options">
+            <button id="create-room-btn">Crear Sala</button>
+            <button id="join-room-btn">Unirse a Sala</button>
+        </div>
+        <button id="back-from-room" class="back-btn">← Volver</button>
+    </div>
+
+    <!-- Unirse a sala con código -->
+    <div id="join-room-screen" class="mode-selection hidden">
+        <h2>Unirse a Sala:</h2>
+        <div class="join-room-form">
+            <input type="text" id="room-code-input" placeholder="Introduce el código de sala" maxlength="6">
+            <button id="join-room-confirm">Unirse</button>
+        </div>
+        <button id="back-from-join" class="back-btn">← Volver</button>
+    </div>
+
+    <!-- Pantalla de espera multijugador -->
+    <div id="multiplayer-waiting" class="mode-selection hidden">
+        <h2 id="waiting-title">Esperando jugadores...</h2>
+        <div id="room-info">
+            <p><strong>Código de sala:</strong></p>
+            <div class="room-code-highlight">
+                <span id="room-code-display">------</span>
+                <button id="copy-room-code" class="copy-btn" title="Copiar código">📋</button>
+            </div>
+            <p id="player-count">Jugadores: 1/2</p>
+        </div>
+        <div class="players-display">
+            <div class="player-slot" id="player1">
+                <div class="player-avatar"></div>
+                <span>Jugador 1</span>
+            </div>
+            <div class="player-slot" id="player2">
+                <div class="player-avatar waiting"></div>
+                <span>Esperando...</span>
+            </div>
+        </div>
+        <div id="countdown" class="hidden">
+            <p>¡Ambos jugadores conectados!</p>
+            <p>El juego comenzará en: <span id="countdown-timer">5</span></p>
+        </div>
+    </div>
+
+    <!-- Game Layout  -->
+    <div id="game-container" class="hidden">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="game-header">
+                <h1>Synapse </h1>
+                <div class="stats">
+                    <p>Puntuación: <span id="score">0</span></p>
+                    <p>Tiempo: <span id="timer">--:--</span></p>
+                    <!-- Info multijugador -->
+                    <div id="multiplayer-info" class="hidden">
+                        <p>Ronda: <span id="current-round">1</span>/<span id="total-rounds">3</span></p>
+                        <p>Rival: <span id="rival-score">0</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="current-challenge">
+                <div class="concept-card start-concept">
+                    <h3>Concepto Inicial</h3>
+                    <img id="start-img" src="" alt="Concepto de inicio">
+                    <div id="start-placeholder" class="image-placeholder hidden">Sin imagen</div>
+                    <div class="concept-title-row">
+                        <h4 id="start-name">Concepto de Inicio</h4>
+                        <a id="start-wiki" class="wiki-btn" href="#" target="_blank" title="Ver en Wikipedia" rel="noopener noreferrer">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                                <text x="12" y="16" text-anchor="middle" font-size="8" fill="white" font-family="Arial, sans-serif" font-weight="bold">W</text>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="arrow-down">⬇</div>
+
+                <div class="concept-card end-concept">
+                    <h3>Objetivo</h3>
+                    <img id="end-img" src="" alt="Concepto objetivo">
+                    <div id="end-placeholder" class="image-placeholder hidden">Sin imagen</div>
+                    <div class="concept-title-row">
+                        <h4 id="end-name">Concepto Objetivo</h4>
+                        <a id="end-wiki" class="wiki-btn" href="#" target="_blank" title="Ver en Wikipedia" rel="noopener noreferrer">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                                <text x="12" y="16" text-anchor="middle" font-size="8" fill="white" font-family="Arial, sans-serif" font-weight="bold">W</text>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button id="start-game-btn" class="primary-btn">Comenzar</button>
+                <button id="check-target-btn" class="success-btn hidden">¡Llegué al Objetivo!</button>
+                <button id="next-button" class="success-btn hidden">Siguiente</button>
+                <button id="another-button" class="warning-btn hidden">Otro</button>
+                <button id="give-up-button" class="danger-btn hidden">Me Rindo</button>
+                <!-- Botones multijugador -->
+                <button id="continue-multiplayer-btn" class="success-btn hidden">Continuar</button>
+                <button id="waiting-rival-btn" class="warning-btn hidden" disabled>Esperando rival...</button>
+            </div>
+
+            <div class="game-status">
+                <p id="status-message">Haz clic en "Comenzar" para iniciar el juego</p>
+            </div>
+        </div>
+
+        <!-- Wikipedia iframe -->
+        <div class="main-content">
+            <iframe id="wikipedia-iframe" src="about:blank" title="Wikipedia">
+                <p>Tu navegador no soporta iframes. <a href="https://es.wikipedia.org" target="_blank">Abre Wikipedia aquí</a></p>
+            </iframe>
+        </div>
+    </div>
+
+    <!-- Pantalla de resultados de ronda (solo multijugador) -->
+    <div id="round-results-screen" class="mode-selection hidden">
+        <h2>Resultados de la Ronda <span id="results-round-number">1</span></h2>
+        <div class="round-results">
+            <div class="result-comparison">
+                <div class="player-result">
+                    <h3>Tú</h3>
+                    <div class="result-status">
+                        <span id="player-result-status" class="status-text">✓ Completado</span>
+                        <span id="player-result-time" class="time-text">en 2:30</span>
+                    </div>
+                    <span id="player-result-score" class="score-increment">+1 punto</span>
+                </div>
+                <div class="vs-divider">VS</div>
+                <div class="rival-result">
+                    <h3>Rival</h3>
+                    <div class="result-status">
+                        <span id="rival-result-status" class="status-text">✗ No completó</span>
+                        <span id="rival-result-time" class="time-text">se quedó en: Historia</span>
+                    </div>
+                    <span id="rival-result-score" class="score-increment">+0 puntos</span>
+                </div>
+            </div>
+            <div class="current-scores">
+                <p><strong>Puntuación Total:</strong> Tú <span id="current-player-score">1</span> - <span id="current-rival-score">0</span> Rival</p>
+                <p id="rounds-remaining"><span id="remaining-count">2</span> ronda(s) restante(s)</p>
+            </div>
+        </div>
+        <div class="round-actions">
+            <button id="continue-next-round-btn" class="primary-btn">
+                <span id="continue-btn-text">Continuar a la Siguiente Ronda</span>
+                <span id="continue-confirmation-status">0/2</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Resumen final -->
+    <footer id="summary-section" class="hidden">
+        <h2>Partida Terminada</h2>
+        <div id="singleplayer-summary">
+            <p>Tu puntuación final es: <span id="final-score">0</span></p>
+            <p id="final-message"></p>
+        </div>
+        <div id="multiplayer-summary" class="hidden">
+            <h3 id="multiplayer-result">¡Has ganado!</h3>
+            <div class="final-scores">
+                <p>Tu puntuación: <span id="player-final-score">0</span></p>
+                <p>Rival: <span id="rival-final-score">0</span></p>
+            </div>
+            <p id="multiplayer-final-message"></p>
+        </div>
+        <button id="play-again-button">Jugar de Nuevo</button>
+    </footer>
+
+    <script src="firebase-multiplayer.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

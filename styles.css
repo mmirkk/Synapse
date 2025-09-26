@@ -1,0 +1,875 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #ffffff;
+    color: #333;
+    line-height: 1.5;
+    overflow: hidden;
+}
+
+/* Mode Selection (same as before) */
+.mode-selection {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    z-index: 1000;
+    max-width: 400px;
+    min-width: 300px;
+}
+
+.mode-selection h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.mode-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+/* Botones de tipo de juego */
+.type-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.type-btn:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Botón volver */
+.back-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.back-btn:hover {
+    background: #545b62;
+}
+
+/* Formulario de unirse a sala */
+.join-room-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#room-code-input {
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    text-align: center;
+    border: 2px solid #007bff;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: bold;
+}
+
+#room-code-input:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+#join-room-confirm {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+#join-room-confirm:hover {
+    background: #1e7e34;
+}
+
+/* Pantalla de espera multijugador */
+#room-info {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+#room-info p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+#room-code-display {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.5rem;
+    background: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    letter-spacing: 0.2em;
+    display: inline-block;
+    margin: 0.5rem 0;
+}
+
+.room-code-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.copy-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s ease;
+}
+
+.copy-btn:hover {
+    background: #1e7e34;
+}
+
+.testing-hint {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #856404;
+}
+
+.test-btn {
+    background: #ffc107;
+    color: #212529;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+    transition: background 0.2s ease;
+}
+
+.test-btn:hover {
+    background: #e0a800;
+}
+
+.players-display {
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem 0;
+    gap: 2rem;
+}
+
+.player-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.player-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #28a745;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.player-avatar.waiting {
+    background: #6c757d;
+    animation: pulse 2s infinite;
+}
+
+.player-avatar.connected {
+    background: #28a745;
+    animation: none;
+}
+
+.player-avatar::before {
+    content: '👤';
+    font-size: 1.5rem;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.player-slot span {
+    font-weight: 500;
+    color: #333;
+}
+
+#countdown {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    color: #856404;
+}
+
+#countdown p {
+    margin: 0.3rem 0;
+    font-weight: 500;
+}
+
+#countdown-timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #dc3545;
+}
+
+/* Info multijugador en el juego */
+#multiplayer-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+#multiplayer-info p {
+    margin: 0;
+}
+
+/* Resumen multijugador */
+.final-scores {
+    display: flex;
+    justify-content: space-around;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.final-scores p {
+    margin: 0;
+    font-weight: 600;
+}
+
+#multiplayer-result {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+/* Game Container */
+#game-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 320px;
+    min-width: 320px;
+    background: #f8f9fa;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.game-header {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.game-header h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.8rem;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: left;
+}
+
+.stats p {
+    margin: 0;
+    padding: 0.3rem 0;
+}
+
+.stats #timer {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #007bff;
+}
+
+/* Información multijugador con mejor espaciado */
+#multiplayer-info {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+#multiplayer-info p {
+    margin: 0.3rem 0;
+    font-size: 0.85rem;
+}
+
+#multiplayer-info span {
+    font-weight: 600;
+    color: #007bff;
+}
+
+/* Concept Cards */
+.current-challenge {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.concept-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.concept-card h3 {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.concept-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+    border: 1px solid #e0e0e0;
+}
+
+.image-placeholder {
+    width: 100px;
+    height: 100px;
+    background: #f0f0f0;
+    color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin: 0 auto 0.5rem;
+    border: 1px solid #e0e0e0;
+}
+
+.concept-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.concept-card h4 {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    margin: 0;
+}
+
+.wiki-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #007bff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25);
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.wiki-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+.arrow-down {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #007bff;
+    margin: 0.5rem 0;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+button {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    text-align: center;
+}
+
+.primary-btn {
+    background: #007bff;
+    color: white;
+}
+
+.primary-btn:hover {
+    background: #0056b3;
+}
+
+.success-btn {
+    background: #28a745;
+    color: white;
+}
+
+.success-btn:hover {
+    background: #1e7e34;
+}
+
+.warning-btn {
+    background: #fd7e14;
+    color: white;
+}
+
+.warning-btn:hover {
+    background: #e55a00;
+}
+
+.danger-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.danger-btn:hover {
+    background: #b02a37;
+}
+
+button:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Game Status */
+.game-status {
+    padding: 0.8rem;
+    background: #e9ecef;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.game-status p {
+    font-size: 0.85rem;
+    color: #495057;
+    margin: 0;
+}
+
+/* Main Content - iframe */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#wikipedia-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ffffff;
+}
+
+/* Summary Section */
+#summary-section {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    text-align: center;
+    z-index: 1000;
+    min-width: 300px;
+}
+
+#summary-section h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+#summary-section p {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+#play-again-button {
+    background: #007bff;
+    color: white;
+    margin-top: 1rem;
+    padding: 0.8rem 1.5rem;
+}
+
+#play-again-button:hover {
+    background: #0056b3;
+}
+
+/* Utility */
+.hidden {
+    display: none !important;
+}
+
+/* Mode selection buttons */
+.mode-options button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#mode-normal {
+    background: #fd7e14;
+}
+
+#mode-hard {
+    background: #dc3545;
+}
+
+#mode-endless {
+    background: #6f42c1;
+}
+
+.mode-options button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 280px;
+        min-width: 280px;
+        padding: 0.8rem;
+    }
+    
+    .concept-card img,
+    .image-placeholder {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .concept-card h4 {
+        font-size: 0.9rem;
+    }
+    
+    .wiki-btn {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .mode-selection {
+        padding: 1.5rem;
+        max-width: 90vw;
+    }
+    
+    .mode-options {
+        gap: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #game-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 40vh;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .main-content {
+        height: 60vh;
+    }
+}
+
+/* Pantalla de resultados de ronda */
+#round-results-screen {
+    max-width: 500px;
+    min-width: 400px;
+}
+
+.round-results {
+    margin-bottom: 1.5rem;
+}
+
+.result-comparison {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.player-result, .rival-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+}
+
+.player-result h3, .rival-result h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.result-status {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+}
+
+.status-text {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.status-text.success {
+    color: #28a745;
+}
+
+.status-text.failed {
+    color: #dc3545;
+}
+
+.status-text.timeout {
+    color: #fd7e14;
+}
+
+.time-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.score-increment {
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.score-increment.positive {
+    background: #d4edda;
+    color: #155724;
+}
+
+.score-increment.neutral {
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+.vs-divider {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #495057;
+    margin: 0 1rem;
+    background: #ffffff;
+    padding: 0.5rem;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.current-scores {
+    text-align: center;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.current-scores p {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.current-scores p:last-child {
+    margin-bottom: 0;
+    color: #6c757d;
+}
+
+.round-actions {
+    display: flex;
+    justify-content: center;
+}
+
+#continue-next-round-btn {
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+#continue-confirmation-status {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-weight: normal;
+}
+
+/* Mejoras para botón OTRO */
+#another-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+#another-confirmation-status {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-weight: normal;
+}
+
+/* Performance optimizations */
+iframe {
+    will-change: transform;
+}
+
+.game-container {
+    transform: translateZ(0);
+}
+
+/* Accesibilidad mejorada */
+button:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Error states */
+.error {
+    border-color: #dc3545 !important;
+    background-color: #fff5f5 !important;
+}
+
+/* Success states */
+.success {
+    border-color: #28a745 !important;
+    background-color: #f8fff8 !important;
+}
+
+/* Responsive improvements for very small screens */
+@media (max-width: 320px) {
+    .mode-selection {
+        padding: 1rem;
+        min-width: 280px;
+    }
+    
+    .concept-display h3 {
+        font-size: 1rem;
+    }
+    
+    .concept-item {
+        padding: 0.5rem;
+    }
+    
+    .game-controls button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}

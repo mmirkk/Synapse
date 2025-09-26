@@ -1,0 +1,26 @@
+{
+  "name": "synapse-wikigame",
+  "version": "1.0.0",
+  "description": "Un juego interactivo multijugador donde navegas de un concepto a otro a través de Wikipedia",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -s .",
+    "build": "echo 'No build step needed for static site'",
+    "dev": "serve -s . -p 3000"
+  },
+  "keywords": [
+    "wikipedia",
+    "game",
+    "multiplayer",
+    "education",
+    "web-game"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
